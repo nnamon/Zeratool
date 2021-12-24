@@ -18,8 +18,10 @@ def getRegValues(filename, endAddr=None):
         r2.cmd("dcu {}".format(entry_addr))
     # drj command is broken in r2 right now
     # so use drrj
+    r2.cmd("drrj") # Fake invocation
     regs = json.loads(r2.cmd("drrj"))
-    regs = dict([(x["reg"], int(x["value"], 16)) for x in regs])
+    regs = dict([(x["reg"], int(x["value"], 16)) for x in regs if x["reg"] not in ("rflags",
+                                                                                   "eflags")])
     r2.quit()
     return regs
 
